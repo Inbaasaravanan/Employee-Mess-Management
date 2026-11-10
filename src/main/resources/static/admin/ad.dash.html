@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Outfit", sans-serif;
+      }
+      body {
+        background: linear-gradient(rgba(10, 11, 20, 0.85), rgba(10, 11, 20, 0.92)), url('../assets/dashboard_bg.png') no-repeat center center fixed;
+        background-size: cover;
+        color: #f1f5f9;
+        min-height: 100vh;
+      }
+      .header {
+        padding: 22px 30px;
+        background: rgba(15, 23, 42, 0.55);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header .title {
+        font-size: 1.35rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        background: linear-gradient(90deg, #fbbf24, #f59e0b);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .header .right {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        color: #cbd5e1;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+      .logout {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        transition: all 0.3s ease;
+      }
+      .logout:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(239, 68, 68, 0.35);
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        padding: 30px 24px;
+      }
+      .stat {
+        background: rgba(30, 41, 59, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 24px 28px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+      }
+      .stat:hover {
+        transform: translateY(-4px);
+        border-color: rgba(245, 158, 11, 0.4);
+        box-shadow: 0 12px 30px rgba(245, 158, 11, 0.1);
+      }
+      .stat h2 {
+        color: #fbbf24;
+        font-size: 2.3rem;
+        font-weight: 800;
+        margin-bottom: 5px;
+      }
+      .stat p {
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        font-weight: 600;
+      }
+      .actions {
+        padding: 0 24px 15px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+      .ref {
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        border: none;
+        color: #0f172a;
+        padding: 10px 20px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.9rem;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+        transition: all 0.3s ease;
+      }
+      .ref:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(245, 158, 11, 0.35);
+      }
+      .live {
+        color: #34d399;
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .live::before {
+        content: "";
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #34d399;
+        border-radius: 50%;
+        animation: pulse 1.5s infinite;
+      }
+      @keyframes pulse {
+        0% { transform: scale(0.9); opacity: 0.6; }
+        50% { transform: scale(1.2); opacity: 1; }
+        100% { transform: scale(0.9); opacity: 0.6; }
+      }
+      .tbl {
+        padding: 0 24px 40px;
+        overflow-x: auto;
+      }
+      .tbl-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #f8fafc;
+        margin-bottom: 16px;
+        letter-spacing: -0.3px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: rgba(30, 41, 59, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        overflow: hidden;
+      }
+      th,
+      td {
+        padding: 16px;
+        text-align: left;
+        font-size: 0.95rem;
+      }
+      th {
+        background: rgba(15, 23, 42, 0.6);
+        color: #fbbf24;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+      }
+      td {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: #cbd5e1;
+      }
+      tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+        color: white;
+      }
+      .s {
+        color: #34d399 !important;
+        font-weight: 700;
+        background: rgba(52, 211, 153, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        text-align: center;
+        display: inline-block;
+      }
+      .f {
+        color: #f87171 !important;
+        font-weight: 700;
+        background: rgba(248, 113, 113, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        text-align: center;
+        display: inline-block;
+      }
+      .p {
+        color: #facc15 !important;
+        font-weight: 700;
+        background: rgba(250, 204, 21, 0.1);
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        text-align: center;
+        display: inline-block;
+      }
+      .empty {
+        text-align: center;
+        color: #94a3b8;
+        padding: 40px !important;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div class="title">📊 Admin Dashboard — Live Payment Monitoring</div>
+      <div class="right">
+        <span id="refreshed"></span>
+        <button class="logout" onclick="logout()">Logout</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <h2 id="tot">0</h2>
+        <p>Total Orders</p>
+      </div>
+      <div class="stat">
+        <h2 id="rev">₹0</h2>
+        <p>Total Revenue</p>
+      </div>
+      <div class="stat">
+        <h2 id="suc">0</h2>
+        <p>Successful</p>
+      </div>
+      <div class="stat">
+        <h2 id="fail">0</h2>
+        <p>Failed</p>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="ref" onclick="load()">🔄 Refresh</button>
+      <span class="live">● Auto-refreshes every 5 seconds from MySQL</span>
+    </div>
+    <div class="tbl">
+      <div class="tbl-title">Recent Payments</div>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Amount</th>
+            <th>Status</th>
+            <th>Transaction ID</th>
+            <th>Date & Time</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr>
+            <td colspan="8" class="empty">Loading...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      const API =
+        window.location.port === "8080" ? "" : "http://localhost:8080";
+      if (!sessionStorage.getItem("admin")) location.href = "ad.login.html";
+      async function load() {
+        try {
+          const [sr, pr] = await Promise.all([
+            fetch(`${API}/api/payment/stats`),
+            fetch(`${API}/api/payment/all`),
+          ]);
+          const s = await sr.json();
+          const pays = await pr.json();
+          document.getElementById("tot").textContent = s.totalOrders || 0;
+          document.getElementById("rev").textContent =
+            "₹" + (s.totalRevenue || 0);
+          document.getElementById("suc").textContent = s.successCount || 0;
+          document.getElementById("fail").textContent = s.failedCount || 0;
+          const tb = document.getElementById("tbody");
+          if (!pays.length) {
+            tb.innerHTML =
+              '<tr><td colspan="8" class="empty">No payments yet. Make a booking to see data here.</td></tr>';
+            return;
+          }
+          tb.innerHTML = pays
+            .map(
+              (p, i) => `<tr>
+      <td>${i + 1}</td><td>${p.employeeName}</td><td>${p.email}</td><td>${p.role || "Employee"}</td>
+      <td>₹${p.amount}</td>
+      <td class="${p.status === "Success" ? "s" : p.status === "Failed" ? "f" : "p"}">${p.status}</td>
+      <td style="font-size:.8rem">${p.razorpayId || "N/A"}</td>
+      <td style="font-size:.8rem">${p.paymentDate ? new Date(p.paymentDate).toLocaleString() : "-"}</td>
+    </tr>`,
+            )
+            .join("");
+          document.getElementById("refreshed").textContent =
+            "Updated: " + new Date().toLocaleTimeString();
+        } catch (e) {
+          document.getElementById("tbody").innerHTML =
+            '<tr><td colspan="8" class="empty">⚠ Cannot reach backend. Is Spring Boot running on port 8080?</td></tr>';
+        }
+      }
+      function logout() {
+        sessionStorage.removeItem("admin");
+        location.href = "ad.login.html";
+      }
+      setInterval(load, 5000);
+      load();
+    </script>
+  </body>
+</html>

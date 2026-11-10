@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Employee Registration</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Outfit", sans-serif;
+      }
+      body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(rgba(10, 11, 20, 0.8), rgba(10, 11, 20, 0.88)), url('../assets/abstract_food_bg.png') no-repeat center center fixed;
+        background-size: cover;
+        padding: 30px;
+        position: relative;
+      }
+      .card {
+        width: 660px;
+        padding: 45px 35px;
+        background: rgba(15, 23, 42, 0.45);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        position: relative;
+        z-index: 10;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(245, 158, 11, 0.4);
+        box-shadow: 0 25px 60px rgba(245, 158, 11, 0.15);
+      }
+      h1 {
+        text-align: center;
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: white;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+        background: linear-gradient(90deg, #ffffff, #cbd5e1);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .sub {
+        text-align: center;
+        color: #cbd5e1;
+        margin-bottom: 28px;
+        font-weight: 500;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+      }
+      .grp {
+        margin-bottom: 15px;
+      }
+      .grp label {
+        display: block;
+        color: #f1f5f9;
+        margin-bottom: 7px;
+        font-weight: 600;
+        font-size: 0.95rem;
+      }
+      .grp input,
+      .grp select {
+        width: 100%;
+        padding: 13px 15px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.04);
+        color: white;
+        outline: none;
+        font-size: 14px;
+        transition: all 0.25s ease;
+      }
+      .grp select {
+        background: #0f172a;
+      }
+      .grp input:focus,
+      .grp select:focus {
+        border-color: #f59e0b;
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 14px rgba(245, 158, 11, 0.25);
+      }
+      .grp input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .full {
+        grid-column: 1/3;
+      }
+      .btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        margin-top: 8px;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #0f172a;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45);
+        filter: brightness(1.1);
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .link {
+        text-align: center;
+        margin-top: 18px;
+        color: #cbd5e1;
+        font-size: 0.95rem;
+        font-weight: 500;
+      }
+      .link a {
+        color: #fbbf24;
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.25s ease;
+      }
+      .link a:hover {
+        color: #f59e0b;
+      }
+      .back {
+        text-align: center;
+        margin-top: 12px;
+      }
+      .back a {
+        color: rgba(255, 255, 255, 0.45);
+        text-decoration: none;
+        font-size: 0.9rem;
+        font-weight: 600;
+        transition: color 0.25s ease;
+      }
+      .back a:hover {
+        color: #fbbf24;
+      }
+      .msg {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .err {
+        color: #f87171;
+      }
+      .ok {
+        color: #4ade80;
+      }
+      @media (max-width: 700px) {
+        .card {
+          width: 100%;
+          padding: 25px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .full {
+          grid-column: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h1>Employee Registration</h1>
+      <p class="sub">
+        Create your account to access the Mess Management System
+      </p>
+      <div class="grid">
+        <div class="grp">
+          <label>Employee Name</label
+          ><input type="text" id="name" placeholder="Full Name" />
+        </div>
+        <div class="grp">
+          <label>Register Number</label
+          ><input type="text" id="registerNo" placeholder="Register No" />
+        </div>
+        <div class="grp">
+          <label>Department</label>
+          <select id="department">
+            <option value="">Select Department</option>
+            <option>CSE</option>
+            <option>IT</option>
+            <option>ECE</option>
+            <option>EEE</option>
+            <option>MECH</option>
+          </select>
+        </div>
+        <div class="grp">
+          <label>Email</label
+          ><input type="email" id="email" placeholder="Email" />
+        </div>
+        <div class="grp">
+          <label>Phone</label
+          ><input type="tel" id="phone" placeholder="Phone Number" />
+        </div>
+        <div class="grp full">
+          <label>Password</label
+          ><input type="password" id="password" placeholder="Create Password" />
+        </div>
+        <div class="grp full">
+          <label>Confirm Password</label
+          ><input type="password" id="confirm" placeholder="Confirm Password" />
+        </div>
+      </div>
+      <button class="btn" id="btn" onclick="register()">Register</button>
+      <div class="msg" id="msg"></div>
+      <div class="link">
+        Already have an account? <a href="emp.login.html">Login Here</a>
+      </div>
+      <div class="back"><a href="../index.html">← Back to Home</a></div>
+    </div>
+    <script>
+      const API =
+        window.location.port === "8080" ? "" : "http://localhost:8080";
+      async function register() {
+        const name = document.getElementById("name").value.trim();
+        const registerNo = document.getElementById("registerNo").value.trim();
+        const department = document.getElementById("department").value;
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const password = document.getElementById("password").value;
+        const confirm = document.getElementById("confirm").value;
+        const btn = document.getElementById("btn");
+        if (
+          !name ||
+          !registerNo ||
+          !department ||
+          !email ||
+          !phone ||
+          !password
+        ) {
+          show("Please fill all fields", "err");
+          return;
+        }
+        if (password !== confirm) {
+          show("Passwords do not match", "err");
+          return;
+        }
+        btn.disabled = true;
+        btn.textContent = "Registering...";
+        try {
+          const r = await fetch(`${API}/api/employee/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name,
+              registerNo,
+              department,
+              email,
+              phone,
+              password,
+            }),
+          });
+          const d = await r.json();
+          if (d.success) {
+            show("Registration Successful! Redirecting...", "ok");
+            setTimeout(() => (location.href = "emp.login.html"), 1200);
+          } else {
+            show(d.message || "Registration failed", "err");
+            btn.disabled = false;
+            btn.textContent = "Register";
+          }
+        } catch (e) {
+          show("Server error. Is backend running on port 8080?", "err");
+          btn.disabled = false;
+          btn.textContent = "Register";
+        }
+      }
+      function show(t, c) {
+        const e = document.getElementById("msg");
+        e.textContent = t;
+        e.className = "msg " + c;
+      }
+    </script>
+  </body>
+</html>

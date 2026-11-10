@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Outfit", sans-serif;
+      }
+      body {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(rgba(10, 11, 20, 0.8), rgba(10, 11, 20, 0.88)), url('../assets/abstract_food_bg.png') no-repeat center center fixed;
+        background-size: cover;
+        overflow: hidden;
+      }
+      .bg {
+        display: none;
+      }
+      .card {
+        width: 380px;
+        padding: 45px 35px;
+        z-index: 2;
+        position: relative;
+        background: rgba(15, 23, 42, 0.45);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 24px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        color: white;
+      }
+      .card:hover {
+        transform: translateY(-5px);
+        border-color: rgba(245, 158, 11, 0.4);
+        box-shadow: 0 25px 60px rgba(245, 158, 11, 0.15);
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-weight: 800;
+        font-size: 1.8rem;
+        letter-spacing: -0.5px;
+        background: linear-gradient(90deg, #ffffff, #cbd5e1);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .grp {
+        margin-bottom: 20px;
+      }
+      .grp input {
+        width: 100%;
+        padding: 14px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        outline: none;
+        background: rgba(255, 255, 255, 0.04);
+        color: white;
+        font-size: 0.95rem;
+        transition: all 0.25s ease;
+      }
+      .grp input:focus {
+        border-color: #f59e0b;
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 0 14px rgba(245, 158, 11, 0.25);
+      }
+      .grp input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #fbbf24, #f59e0b);
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45);
+        filter: brightness(1.1);
+      }
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .msg {
+        text-align: center;
+        margin-top: 15px;
+        font-size: 0.9rem;
+        font-weight: 600;
+      }
+      .err {
+        color: #f87171;
+      }
+      .ok {
+        color: #4ade80;
+      }
+      small {
+        display: block;
+        margin-top: 16px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .back {
+        text-align: center;
+        margin-top: 15px;
+      }
+      .back a {
+        color: rgba(255, 255, 255, 0.45);
+        font-size: 0.9rem;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.25s ease;
+      }
+      .back a:hover {
+        color: #fbbf24;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg"></div>
+    <div class="card">
+      <h2>🔐 Admin Login</h2>
+      <div class="grp">
+        <input type="text" id="user" placeholder="Username" />
+      </div>
+      <div class="grp">
+        <input type="password" id="pw" placeholder="Password" />
+      </div>
+      <button class="btn" id="btn" onclick="login()">Sign In</button>
+      <div class="msg" id="msg"></div>
+      <small>Default: admin / admin123</small>
+      <div class="back"><a href="../index.html">← Back to Home</a></div>
+    </div>
+    <script>
+      const API =
+        window.location.port === "8080" ? "" : "http://localhost:8080";
+      async function login() {
+        const u = document.getElementById("user").value.trim();
+        const p = document.getElementById("pw").value.trim();
+        const btn = document.getElementById("btn");
+        if (!u || !p) {
+          show("Please fill all fields", "err");
+          return;
+        }
+        btn.disabled = true;
+        btn.textContent = "Signing in...";
+        try {
+          const r = await fetch(`${API}/api/auth/admin`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username: u, password: p }),
+          });
+          const d = await r.json();
+          if (d.success) {
+            sessionStorage.setItem("admin", "true");
+            show("Login Successful!", "ok");
+            setTimeout(() => (location.href = "ad.dash.html"), 800);
+          } else {
+            show(d.message || "Wrong credentials", "err");
+            btn.disabled = false;
+            btn.textContent = "Sign In";
+          }
+        } catch (e) {
+          show("Server error. Is backend running on port 8080?", "err");
+          btn.disabled = false;
+          btn.textContent = "Sign In";
+        }
+      }
+      function show(t, c) {
+        const e = document.getElementById("msg");
+        e.textContent = t;
+        e.className = "msg " + c;
+      }
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") login();
+      });
+    </script>
+  </body>
+</html>

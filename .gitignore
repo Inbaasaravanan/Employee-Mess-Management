@@ -1,0 +1,13 @@
+# Generated files
+target/
+build/
+dist/
+node_modules/
+
+# IDE
+.idea/
+.vscode/
+
+# Logs and secrets
+*.log
+.env

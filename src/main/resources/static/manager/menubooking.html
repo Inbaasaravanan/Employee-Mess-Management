@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meal Booking</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap");
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Outfit", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(rgba(10, 11, 20, 0.85), rgba(10, 11, 20, 0.92)), url('../assets/dashboard_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: #f1f5f9;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .header {
+      text-align: center;
+      padding: 60px 20px 20px;
+    }
+
+    .header h1 {
+      font-size: 2.8rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .header span {
+      background: linear-gradient(90deg, #fbbf24, #f59e0b, #ef4444);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .header p {
+      color: #cbd5e1;
+      margin-top: 8px;
+      font-size: 1.15rem;
+      font-weight: 500;
+    }
+
+    .welcome {
+      text-align: center;
+      padding: 10px;
+      color: #fbbf24;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .menu {
+      width: 90%;
+      margin: 35px auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 25px;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 18px;
+      transition: all 0.4s ease;
+      margin-bottom: 12px;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+      border-color: rgba(245, 158, 11, 0.4);
+      box-shadow: 0 15px 35px rgba(245, 158, 11, 0.18);
+    }
+
+    .card:hover img {
+      transform: scale(1.05);
+    }
+
+    .card h3 {
+      margin: 8px 0 6px;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    .price {
+      color: #fbbf24;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+    }
+
+    .qty {
+      width: 70px;
+      padding: 8px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.04);
+      color: white;
+      text-align: center;
+      margin-bottom: 12px;
+      outline: none;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: border-color 0.25s ease;
+    }
+
+    .qty:focus {
+      border-color: #fbbf24;
+    }
+
+    .addbtn {
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #0f172a;
+      border: none;
+      padding: 10px 22px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .addbtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
+    }
+
+    .cart {
+      width: 90%;
+      margin: 40px auto;
+      padding: 30px;
+      background: rgba(30, 41, 59, 0.4);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+    }
+
+    .cart h2 {
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: #fbbf24;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+      font-weight: 500;
+    }
+
+    .total {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 1.5rem;
+      color: #fbbf24;
+      font-weight: 800;
+    }
+
+    .actions {
+      width: 90%;
+      margin: 20px auto 60px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .paybtn {
+      padding: 14px 36px;
+      font-size: 1rem;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      border: none;
+      color: #0f172a;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .paybtn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45);
+    }
+
+    .outbtn {
+      padding: 14px 36px;
+      font-size: 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      color: white;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.3s ease;
+    }
+
+    .outbtn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <h1><span>Meal Booking</span> System</h1>
+    <p>Select food, choose quantity and book instantly</p>
+  </div>
+  <div class="welcome" id="welcome"></div>
+  <div class="menu" id="menuGrid"></div>
+  <div class="cart">
+    <h2> Cart</h2>
+    <div id="cartItems"></div>
+    <div class="total">Total : ₹<span id="total">0</span></div>
+  </div>
+  <div class="actions">
+    <button class="paybtn" onclick="goPayment()">Proceed to Payment</button>
+    <button class="outbtn" onclick="logout()">Logout</button>
+  </div>
+  <script>
+    const items = [
+      { name: "Idli", price: 30, img: "../assets/idly.png" },
+      { name: "Dosa", price: 40, img: "../assets/dosa.png" },
+      { name: "Veg Briyani", price: 50, img: "../assets/veg_briyani.png" },
+      { name: "Chapathi", price: 40, img: "../assets/chappathi.png" },
+      { name: "Chicken Biryani", price: 120, img: "../assets/briyani.png" },
+      { name: "Fried Rice", price: 80, img: "../assets/fried_rice.png" },
+      { name: "Noodles", price: 70, img: "../assets/noodles.webp" },
+      { name: "Samosa", price: 15, img: "../assets/samosa.webp" },
+      { name: "Parotta", price: 35, img: "../assets/parotta.jpg" },
+      { name: "Tea", price: 10, img: "../assets/tea.webp" },
+      { name: "Coffee", price: 20, img: "../assets/coffee.webp" },
+    ];
+    const name = sessionStorage.getItem("manName");
+    if (!name) {
+      location.href = "man.login.html";
+    }
+    document.getElementById("welcome").textContent =
+      `Welcome, Manager ${name}!`;
+    const grid = document.getElementById("menuGrid");
+    items.forEach((it, i) => {
+      grid.innerHTML += `<div class="card"><img src="${it.img}" alt="${it.name}"><h3>${it.name}</h3><div class="price">₹${it.price}</div><input type="number" class="qty" id="q${i}" value="1" min="1"><br><button class="addbtn" onclick="add(${i})">Add</button></div>`;
+    });
+    let cart = [];
+    function add(i) {
+      const qty = parseInt(document.getElementById("q" + i).value) || 1;
+      const ex = cart.find((c) => c.name === items[i].name);
+      if (ex) ex.qty += qty;
+      else cart.push({ ...items[i], qty });
+      render();
+    }
+    function render() {
+      const el = document.getElementById("cartItems");
+      el.innerHTML = "";
+      let t = 0;
+      cart.forEach((c) => {
+        const s = c.price * c.qty;
+        t += s;
+        el.innerHTML += `<div class="item"><span>${c.name} × ${c.qty}</span><span>₹${s}</span></div>`;
+      });
+      document.getElementById("total").textContent = t;
+    }
+    function goPayment() {
+      if (!cart.length) {
+        alert("Cart is empty!");
+        return;
+      }
+      sessionStorage.setItem("cart", JSON.stringify(cart));
+      sessionStorage.setItem(
+        "total",
+        document.getElementById("total").textContent,
+      );
+      location.href = "payment.html";
+    }
+    function logout() {
+      sessionStorage.clear();
+      location.href = "man.login.html";
+    }
+  </script>
+</body>
+
+</html>

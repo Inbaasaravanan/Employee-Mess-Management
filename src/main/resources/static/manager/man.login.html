@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manager Login</title>
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap");
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Outfit", sans-serif;
+    }
+
+    body {
+      background: linear-gradient(rgba(10, 11, 20, 0.8), rgba(10, 11, 20, 0.88)), url('../assets/abstract_food_bg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .card {
+      width: 380px;
+      padding: 45px 35px;
+      background: rgba(15, 23, 42, 0.45);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(245, 158, 11, 0.4);
+      box-shadow: 0 25px 60px rgba(245, 158, 11, 0.15);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 1.9rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .grp {
+      margin-bottom: 20px;
+    }
+
+    .grp label {
+      display: block;
+      margin-bottom: 8px;
+      color: #f1f5f9;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .grp input {
+      width: 100%;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+      color: white;
+      border-radius: 12px;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .grp input:focus {
+      border-color: #f59e0b;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 14px rgba(245, 158, 11, 0.25);
+    }
+
+    .grp input::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #fbbf24, #f59e0b);
+      color: #0f172a;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(245, 158, 11, 0.2);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(245, 158, 11, 0.45);
+      filter: brightness(1.1);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .msg {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .err {
+      color: #f87171;
+    }
+
+    .ok {
+      color: #4ade80;
+    }
+
+    .back {
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .back a {
+      color: rgba(255, 255, 255, 0.45);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: color 0.25s ease;
+    }
+
+    .back a:hover {
+      color: #fbbf24;
+    }
+
+    small {
+      display: block;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.45);
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1> Manager Login</h1>
+    <div class="grp">
+      <label>Manager ID</label><input type="text" id="mid" placeholder="e.g. man101" />
+    </div>
+    <div class="grp">
+      <label>Password</label><input type="password" id="pw" placeholder="Password" />
+    </div>
+    <button class="btn" id="btn" onclick="login()">Login</button>
+    <div class="msg" id="msg"></div>
+    <small>Default: man101 / 1234 or man102 / 5678</small>
+    <div class="back"><a href="../index.html">← Back to Home</a></div>
+  </div>
+  <script>
+    const API =
+      window.location.port === "8080" ? "" : "http://localhost:8080";
+    async function login() {
+      const mid = document.getElementById("mid").value.trim();
+      const pw = document.getElementById("pw").value.trim();
+      const btn = document.getElementById("btn");
+      if (!mid || !pw) {
+        show("Please fill all fields", "err");
+        return;
+      }
+      btn.disabled = true;
+      btn.textContent = "Logging in...";
+      try {
+        const r = await fetch(`${API}/api/auth/manager`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ managerId: mid, password: pw }),
+        });
+        const d = await r.json();
+        if (d.success) {
+          sessionStorage.setItem("manId", d.managerId);
+          sessionStorage.setItem("manName", d.name);
+          show("Login Successful!", "ok");
+          setTimeout(() => (location.href = "menubooking.html"), 800);
+        } else {
+          show(d.message || "Invalid credentials", "err");
+          btn.disabled = false;
+          btn.textContent = "Login";
+        }
+      } catch (e) {
+        show("Server error. Is backend running on port 8080?", "err");
+        btn.disabled = false;
+        btn.textContent = "Login";
+      }
+    }
+    function show(t, c) {
+      const e = document.getElementById("msg");
+      e.textContent = t;
+      e.className = "msg " + c;
+    }
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") login();
+    });
+  </script>
+</body>
+
+</html>
